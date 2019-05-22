@@ -6,7 +6,7 @@ cd gitlab-global-search
 
 pip install -r requirements.txt
 
-update .gitlab.cfg
+update .gitlab.cfg(Get private_token from `Personal Access Tokens` in gitlab with `api` scope.)
 
 python search.py -w test
 
