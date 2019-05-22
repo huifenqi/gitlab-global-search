@@ -1,6 +1,6 @@
 # gitlab-global-search
 
-git clone git@github.com:iamsk/gitlab-global-search.git
+git clone git@github.com:huifenqi/gitlab-global-search.git
 
 cd gitlab-global-search
 
