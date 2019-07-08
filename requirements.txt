@@ -2,3 +2,4 @@ click
 python-gitlab
 configparser
 colored
+gevent
