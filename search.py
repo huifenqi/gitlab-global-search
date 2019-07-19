@@ -56,5 +56,12 @@ def search(word, count, debug):
     conpig.wait_all()
 
 
+def get_all_my_stars():
+    projects = gl.projects.list(starred=True, all=True, order_by='name', sort='asc')
+    for project in projects:
+        print(project.web_url)
+
+
 if __name__ == '__main__':
     search()
+    # get_all_my_stars()
