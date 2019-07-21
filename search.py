@@ -42,26 +42,35 @@ class Searcher(object):
             print('=' * 10 + project.name + '=' * 10 + ' None')
 
 
+def get_all_my_stars():
+    stars = []
+    projects = gl.projects.list(starred=True, all=True, order_by='name', sort='asc')
+    for project in projects:
+        stars.append(project.name)
+    return stars
+
+
 @click.command()
 @click.option('-w', '--word', help='word to search.')
 @click.option('-c', '--count', default=1, help='limit results for each repo.', show_default=True)
+@click.option('-s', '--scope', default='all', help='all|star|unstar.', show_default=True)
 @click.option('--debug/--no-debug', default=False)
-def search(word, count, debug):
+def search(word, count, scope, debug):
     print('searching {} on {}...'.format(word, domain))
     s = Searcher(word, count, debug)
     projects = gl.projects.list(as_list=False)
+    stars = get_all_my_stars() if scope != 'all' else []
     for project in projects:
+        if scope == 'star':
+            if project.name not in stars:
+                continue
+        elif scope == 'unstar':
+            if project.name in stars:
+                continue
         # s.search(project)
         conpig.spawn(s.search, project)
     conpig.wait_all()
 
 
-def get_all_my_stars():
-    projects = gl.projects.list(starred=True, all=True, order_by='name', sort='asc')
-    for project in projects:
-        print(project.web_url)
-
-
 if __name__ == '__main__':
     search()
-    # get_all_my_stars()
