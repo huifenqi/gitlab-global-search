@@ -4,6 +4,10 @@ git clone git@github.com:huifenqi/gitlab-global-search.git
 
 cd gitlab-global-search
 
+virtualenv env
+
+source env/bin/activate
+
 pip install -r requirements.txt
 
 update .gitlab.cfg(Get private_token from `Personal Access Tokens` in gitlab with `api` scope.)
