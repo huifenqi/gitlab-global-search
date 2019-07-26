@@ -2,10 +2,11 @@ import os
 import click
 import gitlab
 import json
+import urllib3
 from configparser import ConfigParser
 from colored import fg, bg, attr
 
-import conpig
+urllib3.disable_warnings()
 
 config = ConfigParser()
 cfg_path = os.path.join(os.environ['HOME'], '.gitlab.cfg')
@@ -67,9 +68,7 @@ def search(word, count, scope, debug):
         elif scope == 'unstar':
             if project.name in stars:
                 continue
-        # s.search(project)
-        conpig.spawn(s.search, project)
-    conpig.wait_all()
+        s.search(project)
 
 
 if __name__ == '__main__':
