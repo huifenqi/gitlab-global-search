@@ -1,4 +1,6 @@
 import os
+import gevent
+from gevent import monkey;monkey.patch_all()
 import click
 import gitlab
 import json
@@ -34,10 +36,10 @@ class Searcher(object):
         self.debug = debug
 
     def search(self, project):
-        results = project.search('blobs', self.word)
+        results = project.search('blobs', self.word, page=1, per_page=self.count)
         if results:
             print('=' * 10 + project.name + '=' * 10)
-            for idx in range(min(self.count, len(results))):
+            for idx in range(len(results)):
                 print(replace(json.dumps(results[idx]), self.word))
         elif self.debug:
             print('=' * 10 + project.name + '=' * 10 + ' None')
@@ -80,10 +82,13 @@ def search(word, count, scope, repo, filename, debug):
     else:
         projects = gl.projects.list(as_list=False)
     s = Searcher(word, count, debug)
+    tasks = []
     for project in projects:
         if scope == 'unstar' and project.name in stars:
             continue
-        s.search(project)
+        # s.search(project)
+        tasks.append(gevent.spawn(s.search, project))
+    gevent.joinall(tasks)
 
 
 if __name__ == '__main__':
